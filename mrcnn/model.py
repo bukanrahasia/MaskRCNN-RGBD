@@ -1908,21 +1908,21 @@ class MaskRCNN():
         else:
             _, C2, C3, C4, C5 = resnet_graph(S_RGB, config.BACKBONE,
                                              stage5=True, train_bn=config.TRAIN_BN)
-            _, C2D, C3D, C4D, C5D = resnet_graaph(S_DEPTH, config.BACKBONE,
+            _, C2D, C3D, C4D, C5D = resnet_graph(S_DEPTH, config.BACKBONE,
                                              stage5=True, train_bn=config.TRAIN_BN)
 
         # Top-down Layers
         # TODO: add assert to varify feature map sizes match what's in config
-        P5 = KL.Conv2D(config.TOP_DOWN_PYRAMID_SIZE, (1, 1), name='fpn_c5p5')(KL.Add()([C5, C5D])
+        P5 = KL.Conv2D(config.TOP_DOWN_PYRAMID_SIZE, (1, 1), name='fpn_c5p5')(KL.Add()([C5, C5D]))
         P4 = KL.Add(name="fpn_p4add")([
             KL.UpSampling2D(size=(2, 2), name="fpn_p5upsampled")(P5),
-            KL.Conv2D(config.TOP_DOWN_PYRAMID_SIZE, (1, 1), name='fpn_c4p4')(KL.Add()([C4, C4D])])
+            KL.Conv2D(config.TOP_DOWN_PYRAMID_SIZE, (1, 1), name='fpn_c4p4')(KL.Add()([C4, C4D]))])
         P3 = KL.Add(name="fpn_p3add")([
             KL.UpSampling2D(size=(2, 2), name="fpn_p4upsampled")(P4),
-            KL.Conv2D(config.TOP_DOWN_PYRAMID_SIZE, (1, 1), name='fpn_c3p3')(KL.Add()([C3, C3D])])
+            KL.Conv2D(config.TOP_DOWN_PYRAMID_SIZE, (1, 1), name='fpn_c3p3')(KL.Add()([C3, C3D]))])
         P2 = KL.Add(name="fpn_p2add")([
             KL.UpSampling2D(size=(2, 2), name="fpn_p3upsampled")(P3),
-            KL.Conv2D(config.TOP_DOWN_PYRAMID_SIZE, (1, 1), name='fpn_c2p2')(KL.Add()([C2, C2D])])
+            KL.Conv2D(config.TOP_DOWN_PYRAMID_SIZE, (1, 1), name='fpn_c2p2')(KL.Add()([C2, C2D]))])
         # Attach 3x3 conv to all P layers to get the final feature maps.
         P2 = KL.Conv2D(config.TOP_DOWN_PYRAMID_SIZE, (3, 3), padding="SAME", name="fpn_p2")(P2)
         P3 = KL.Conv2D(config.TOP_DOWN_PYRAMID_SIZE, (3, 3), padding="SAME", name="fpn_p3")(P3)
