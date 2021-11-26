@@ -1208,7 +1208,7 @@ def load_image_gt(dataset, config, image_id, augment=False, augmentation=None,
         defined in MINI_MASK_SHAPE.
     """
     # Load image and mask
-    image = dataset.load_image(image_id)
+    image = dataset.load_image(image_id, mode=config.MODE)
     mask, class_ids = dataset.load_mask(image_id)
     original_shape = image.shape
     image, window, scale, padding, crop = utils.resize_image(
@@ -1835,6 +1835,7 @@ class MaskRCNN():
         self.model_dir = model_dir
         self.set_log_dir()
         self.keras_model = self.build(mode=mode, config=config)
+        self.keras_model.metrics_tensors = []
 
     def build(self, mode, config):
         """Build Mask R-CNN architecture.
