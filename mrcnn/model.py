@@ -1960,7 +1960,7 @@ class MaskRCNN():
         P5A = KL.Add()([P5, P5D])
         P6A = KL.Add()([P6, P6D])
         rpn_feature_maps = [P2A, P3A, P4A, P5A, P6A]
-        mrcnn_feature_maps = [P2A, P3A, P4A, P5A, P6A]
+        mrcnn_feature_maps = [P2A, P3A, P4A, P5A]
 
         # Anchors
         if mode == "training":
