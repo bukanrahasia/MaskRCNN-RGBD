@@ -1954,8 +1954,13 @@ class MaskRCNN():
         P6D = KL.MaxPooling2D(pool_size=(1, 1), strides=2, name="fpn_p6DEPTH")(P5D)
 
         # Note that P6 is used in RPN, but not in the classifier heads.
-        rpn_feature_maps = [P2, P3, P4, P5, P6, P2D, P3D, P4D, P5D, P6D]
-        mrcnn_feature_maps = [P2, P3, P4, P5, P2D, P3D, P4D, P5D]
+        P2A = KL.Add()([P2, P2D])
+        P3A = KL.Add()([P3, P3D])
+        P4A = KL.Add()([P4, P4D])
+        P5A = KL.Add()([P5, P5D])
+        P6A = KL.Add()([P6, P6D])
+        rpn_feature_maps = [P2A, P3A, P4A, P5A, P6A]
+        mrcnn_feature_maps = [P2A, P3A, P4A, P5A, P6A]
 
         # Anchors
         if mode == "training":
